@@ -44,7 +44,52 @@ class Pokemon {
         Alamofire.request(.GET, url).responseJSON { response in
             let result = response.result
             
-            print(result.value.debugDescription)
+            if let dict = result.value as? Dictionary<String, AnyObject> {
+                
+                if let weight = dict["weight"] as? String {
+                    self._weight = weight
+                }
+                
+                if let height = dict["height"] as? String {
+                    self._height = height
+                }
+                
+                if let attack = dict["attack"] as? Int {
+                    self._attack = "\(attack)"
+                }
+                
+                if let defense = dict["defense"] as? Int {
+                    self._defense = "\(defense)"
+                }
+                
+                print("weight=\(self._weight)")
+                print("height=\(self._height)")
+                print("attack=\(self._attack)")
+                print("defense=\(self._defense)")
+                
+                if let types = dict["types"] as? [Dictionary<String, String>] where types.count > 0 {
+                    //print(types.debugDescription)
+                    
+                    if let name = types[0]["name"] {
+                        self._type = name.capitalizedString
+                    }
+                    
+                    if types.count > 1 {
+                        for var x = 1; x < types.count; x++ {
+                            if let name = types[x]["name"] {
+                                self._type! += "/\(name.capitalizedString)"
+                            }
+                            
+                        }
+                    }
+                } else {
+                    self._type = ""
+                }
+                
+                print("type=\(self._type)")
+                
+                
+            }
         }
     }
     
